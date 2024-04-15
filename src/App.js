@@ -42,17 +42,10 @@ const tempPlaylist = [
 ];
 
 function NavBar() {
-  const [query, setQuery] = useState("");
   return (
     <nav className="container">
       <h1 style={{ textAlign: "center" }}>Music App</h1>
-      <input
-        className="search"
-        type="text"
-        placeholder="Search movies..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <Search />
       <p>
         {" "}
         Found <strong>X</strong> results
@@ -60,39 +53,55 @@ function NavBar() {
     </nav>
   );
 }
-function App() {
+function Search() {
+  const [query, setQuery] = useState("");
+  return (
+    <input
+      className="search"
+      type="text"
+      placeholder="Search movies..."
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+    />
+  );
+}
+function Main() {
   const [musics, setMusic] = useState(tempMusicData);
   const [playlist, setPlaylist] = useState(tempPlaylist);
   const addToPlaylist = (music) => {
     setPlaylist([...playlist, music]);
   };
   return (
+    <div className="container">
+      <div className="container">
+        <h2>Music List</h2>
+
+        <ul>
+          {musics.map((music) => (
+            <li key={music.id}>
+              {music.title} by {music.artist} ({music.genre})<button>♥️</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="container">
+        <h2>Playlist</h2>
+        <ul>
+          {playlist.map((music) => (
+            <li key={music.id}>
+              {music.title} by {music.artist}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+function App() {
+  return (
     <div>
       <NavBar />
-      <div className="container">
-        <div className="container">
-          <h2>Music List</h2>
-
-          <ul>
-            {musics.map((music) => (
-              <li key={music.id}>
-                {music.title} by {music.artist} ({music.genre})
-                <button>♥️</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="container">
-          <h2>Playlist</h2>
-          <ul>
-            {playlist.map((music) => (
-              <li key={music.id}>
-                {music.title} by {music.artist}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <Main />
     </div>
   );
 }
