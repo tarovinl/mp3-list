@@ -31,16 +31,20 @@ li {
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  background-color: #007bff;
+  padding: 10px 10px;
+  font-size: 12px;
+  border-radius: 10%;
+  border-style: none;
+  background-color: #182430;
   color: #fff;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+.fa-plus:hover {
+  color: #2ade48;
+}
+.fa-times:hover {
+  color: #d01212;
 }
 
 @media (max-width: 768px) {
