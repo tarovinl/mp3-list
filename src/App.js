@@ -6,7 +6,6 @@ const tempMusicData = [
     title: "Agora Hills",
     artist: "Doja Cat",
     genre: "R&B",
-    userRating: 5,
   },
   {
     id: 2,
@@ -123,20 +122,82 @@ const tempMusicData = [
     artist: "Porter Robinson",
     genre: "Electronic",
   },
+  {
+    id: 21,
+    title: "I LUV IT",
+    artist: "Camila Cabello",
+    genre: "Pop",
+  },
+  {
+    id: 22,
+    title: "AAA Powerline",
+    artist: "Ecco2k",
+    genre: "Electronic",
+  },
+  {
+    id: 23,
+    title: "Western Union",
+    artist: "Thaiboy Digital, Ecco2k, Bladee",
+    genre: "Electronic",
+  },
+  {
+    id: 24,
+    title: "RIIVERDANCE",
+    artist: "Beyonce",
+    genre: "Dance",
+  },
+  {
+    id: 25,
+    title: "ART",
+    artist: "Tyla",
+    genre: "Afro",
+  },
+  {
+    id: 26,
+    title: "Good Luck, Babe!",
+    artist: "Chappell Roan",
+    genre: "Pop",
+  },
+  {
+    id: 27,
+    title: "Impossible",
+    artist: "RIIZE",
+    genre: "KPop",
+  },
+  {
+    id: 28,
+    title: "ballad of a homeschooled girl",
+    artist: "Olivia Rodrigo",
+    genre: "Pop",
+  },
+  {
+    id: 29,
+    title: "Clara Bow",
+    artist: "Taylor Swift",
+    genre: "Folk",
+  },
+  {
+    id: 30,
+    title: "Replay",
+    artist: "SHINee",
+    genre: "KPop",
+  },
 ];
 const tempPlaylist = [];
 function App() {
   const [music, setMusic] = useState(tempMusicData);
   const [playlist, setPlaylist] = useState(tempPlaylist);
   const [filteredMusic, setFilteredMusic] = useState(tempMusicData);
+  const [sortBy, setSortBy] = useState("title");
 
   const handleSearch = (searchTerm) => {
     const filtered = music.filter(
       (musicItem) =>
         musicItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         musicItem.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        musicItem.genre.toLowerCase().includes(searchTerm.toLowerCase())
+        musicItem.genre.toLowerCase().includes(searchTerm.toLowerCase()),
     );
+
     setFilteredMusic(filtered);
   };
 
@@ -145,9 +206,9 @@ function App() {
   };
 
   return (
-    <div>
-      <NavBar>
-        <NumberResult music={music} />
+    <div style={{ backgroundImage: `url('/bg.png')` }}>
+      <NavBar onSearch={handleSearch}>
+        <NumberResult music={filteredMusic} />
       </NavBar>
       <Main>
         <Box>
@@ -167,7 +228,7 @@ function App() {
 
 function NavBar({ children, onSearch }) {
   return (
-    <nav className="container">
+    <nav className="navigation">
       <Logo />
       <Search onSearch={onSearch} />
       {children}
@@ -176,7 +237,11 @@ function NavBar({ children, onSearch }) {
 }
 
 function Logo() {
-  return <h1>Music App Logo</h1>;
+  return (
+    <div>
+      <img src="/logo.png" alt="Music App Logo" />
+    </div>
+  );
 }
 
 function NumberResult({ music }) {
@@ -187,20 +252,27 @@ function NumberResult({ music }) {
   );
 }
 
-function Search() {
+function Search({ onSearch }) {
   const [query, setQuery] = useState("");
+
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value;
+    setQuery(searchTerm);
+    onSearch(searchTerm);
+  };
   return (
     <input
       className="search"
       type="text"
       placeholder="Search music..."
       value={query}
-      onChange={(e) => setQuery(e.target.value)}
+      onChange={handleSearch}
     />
   );
 }
 
 function Music({ music, playlist, setPlaylist }) {
+  const [sortOption, setSortOption] = useState("alphabetical");
   const addToPlayList = (music) => {
     const index = playlist.findIndex((item) => item.id === music.id);
     if (index === -1) {
@@ -211,24 +283,54 @@ function Music({ music, playlist, setPlaylist }) {
     }
   };
 
+  const sortMusic = (a, b) => {
+    if (sortOption === "alphabetical") {
+      return a.title.localeCompare(b.title);
+    } else if (sortOption === "genre") {
+      return a.genre.localeCompare(b.genre);
+    }
+    return 0;
+  };
+
   return (
     <ul>
-      <h2>Music List</h2>
+      <h1>Songs</h1>
+      <label htmlFor="sortOption">Sort by:</label>
+      <select
+        id="sortOption"
+        value={sortOption}
+        onChange={(e) => setSortOption(e.target.value)}
+      >
+        <option value="alphabetical">Alphabetical</option>
+        <option value="genre">Genre</option>
+      </select>
 
-      {music.map((musicItem) => (
+      {music.sort(sortMusic).map((musicItem) => (
         <li
           key={musicItem.id}
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "8px",
+          }}
         >
-          {musicItem.title} by {musicItem.artist} ({musicItem.genre}){" "}
+          <span style={{ flex: 1 }}>
+            <h3> {musicItem.title} </h3>by {musicItem.artist} ({musicItem.genre}
+            )
+          </span>
           <button
             onClick={() => addToPlayList(musicItem)}
-            style={{ marginLeft: "8px", backgroundColor: "#fffff" }}
+            style={{
+              width: "40px",
+              marginLeft: "8px",
+              backgroundColor: "#ffffff",
+              textAlign: "center",
+            }}
           >
             {playlist.some((item) => item.id === musicItem.id) ? (
-              <i class="fa fa-times"></i>
+              <i className="fa fa-times"></i>
             ) : (
-              <i class="fa fa-plus"></i>
+              <i className="fa fa-plus"></i>
             )}
           </button>
         </li>
@@ -242,15 +344,20 @@ function Box({ children }) {
 }
 
 function Playlist({ playlist }) {
+  const uniqueArtistCount = () => {
+    const uniqueArtists = new Set(playlist.map((music) => music.artist));
+    return uniqueArtists.size;
+  };
+
   return (
     <>
-      <h2>Playlist</h2>
+      <h1>Playlist</h1>
 
       <ul>
         {playlist.map((music) => (
           <li key={music.id}>
             <p>
-              {music.title} by {music.artist}
+              <h3> {music.title}</h3> by {music.artist}
               <span></span>
               <span>{music.rating}</span>
             </p>
@@ -259,6 +366,9 @@ function Playlist({ playlist }) {
       </ul>
       <p>
         <strong>{playlist.length}</strong> Songs
+      </p>
+      <p>
+        <strong>{uniqueArtistCount()}</strong> Artists
       </p>
     </>
   );

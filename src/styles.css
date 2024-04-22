@@ -1,8 +1,11 @@
 /* src/styles.css */
 
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap");
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
+  font-family: "DM Sans", sans-serif;
+  background-size: 1080px 2400px;
+  background-repeat: repeat;
   margin: 0;
   padding: 0;
 }
@@ -10,7 +13,20 @@ body {
 .container {
   display: flex;
   justify-content: space-around;
+  margin: 30px;
+}
+.search {
+  width: 350px;
+  border-radius: 25px;
+  border-style: solid;
+  font-family: "EB Garamond", serif;
+  padding-left: 10px;
+}
+.navigation {
+  display: flex;
+  justify-content: space-around;
   margin: 10px;
+  background-color: #fff;
 }
 
 .container > div {
@@ -18,11 +34,14 @@ body {
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
 }
-
+select {
+  font-family: "EB Garamond", serif;
+}
 ul {
   list-style: none;
-  padding: 0;
+  padding: 5px;
 }
 
 li {
@@ -31,19 +50,19 @@ li {
 }
 
 button {
-  padding: 10px 10px;
-  font-size: 12px;
-  border-radius: 10%;
-  border-style: none;
+  padding: 8px 8px;
+  font-size: 15px;
+  border-radius: 50%;
+  border-style: solid;
   background-color: #182430;
   color: #fff;
   cursor: pointer;
 }
 
-.fa-plus:hover {
-  color: #2ade48;
+.fa-plus {
+  color: #e0a5ca;
 }
-.fa-times:hover {
+.fa-times {
   color: #d01212;
 }
 
